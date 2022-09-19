@@ -1,3 +1,5 @@
+%% trying to find a way to truncate kinect data by comparing to BalanSens data
+
 clear
 clc
 
@@ -106,39 +108,41 @@ end
 m1 = median(fullbody_cm(:,1));
 m2 = median(fullbody_cm(:,2));
 
-% figure(1)
-% 
-% subplot(2,1,1)
-% yline(m1)
-% 
-% subplot(2,1,2)
-% yline(m2)
-% 
 ml_centered_all = fullbody_cm(:,1)-m1; 
 ap_centered_all = fullbody_cm(:,2)-m2;
 
-% visualize CM ML and AP sway over time
+%% load BalanSens data
 
-% figure(1)
-% 
-% subplot(2,1,1)
-% plot(timeVec*0.001,fullbody_cm(:,1))
-% xlabel 'time (s)'
-% ylabel 'CM ML position'
-% 
-% subplot(2,1,2)
-% plot(timeVec*0.001,fullbody_cm(:,2))
-% hold on
-% xlabel 'time (s)'
-% ylabel 'CM AP position'
+file_path_2 = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Wyse Sookoo\BalanSens Data\20181120-mvi06_mr_foamEC_1a.csv';
+data = readmatrix(file_path_2);
 
-% figure(2)
-% plot3(timeVec*0.001,fullbody_cm(:,1),fullbody_cm(:,2))
-% xlabel 'time'
-% ylabel 'ML'
-% zlabel 'AP'
+% columns = ankle angle ML, ankle angle AP, hip angle ML, hip angle AP, 
+% COM sway ML (cm), COM sway AP (cm), sway velocity (cm/s)
 
-%% truncate
+ml_cm_sway = data(:,5);
+ap_cm_sway = data(:,6);
+
+%% compare un-truncated centered data to BalanSens limits
+
+figure(1)
+
+subplot(2,1,1)
+plot(timeVec_all*0.001,ml_centered_all)
+hold on
+yline(max(ml_cm_sway/10))
+yline(min(ml_cm_sway/10))
+xlabel 'time (s)'
+ylabel 'Centered CM ML position'
+
+subplot(2,1,2)
+plot(timeVec_all*0.001,ap_centered_all)
+hold on
+yline(max(ap_cm_sway/10))
+yline(min(ap_cm_sway/10))
+xlabel 'time (s)'
+ylabel 'Centered CM AP position'
+
+%% truncate to match balansens
 
 totalTime = (timeVec_all(end) - timeVec_all(1))*0.001;
 joint_info = joint_info_all(:,1);
@@ -151,7 +155,7 @@ for joint_idx = 1:length(joint_idxs)
     
         timeElapsed = (timeVec_all(time_idx) - timeVec_all(1))*0.001;
     
-         if  timeElapsed >=10 && timeElapsed <= totalTime-10
+         if  timeElapsed >=10 && timeElapsed <= totalTime-2
             joint_info{joint_idx,2}(:,trunc_idx) = joint_info_all{joint_idx,2}(:,time_idx);
             ml_centered(trunc_idx) = ml_centered_all(time_idx); 
             ap_centered(trunc_idx) = ap_centered_all(time_idx);
@@ -162,31 +166,8 @@ for joint_idx = 1:length(joint_idxs)
     end
 end
 
-
-%% visualize centered data
-
-figure(3)
-
-subplot(2,1,1)
-plot(timeVec*0.001,ml_centered)
-xlabel 'time (s)'
-ylabel 'Centered CM ML position'
-
-subplot(2,1,2)
-plot(timeVec*0.001,ap_centered)
-xlabel 'time (s)'
-ylabel 'Centered CM AP position'
-
-
-%% RMS
-
-ml_rms = sqrt(mean(ml_centered.^2));
-ap_rms = sqrt(mean(ap_centered.^2));
-
-% figure(4)
-% plot(ml_centered,ap_centered)
-% hold on
-% plot(ml_rms,ap_rms, '*')
-% xlabel 'ML'
-% ylabel 'AP'
-
+figure(2)
+plot(ml_cm_sway,ap_cm_sway)
+hold on
+plot(ml_centered.*10,ap_centered.*10)
+axis([-2 2 -2 2])
