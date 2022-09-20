@@ -43,3 +43,6 @@ Outputs
 
 ### sway_metrics
 * will eventually be used to extract relevant metrics from kinect sway data
+
+### balansens_truncation
+* script for attempting to truncate trial data based on balansens data for better trial start/stop accuracy
