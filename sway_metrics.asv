@@ -80,7 +80,10 @@ end
 
  % calculate full body CM
 
- m = 130/2.2; % placeholder
+ m = 220/2.2; 
+
+ % MVI003 = 135/2.2
+ % MVI006 = 220/2.2
 
  segment_mass = [0.0668; 0.4257; 0.0255; 0.0255; 0.0138; 0.0138 ;0.0056;...
      0.0056; 0.1478; 0.1478; 0.0481; 0.0481; 0.0129; 0.0129];
@@ -107,10 +110,16 @@ m2 = median(fullbody_cm(:,2));
 % 
 % subplot(2,1,1)
 % yline(m1)
+% hold on
+% yline(mean(fullbody_cm(:,1)), 'r')
+% legend 'median' 'mean'
 % 
 % subplot(2,1,2)
 % yline(m2)
-% 
+% hold on
+% yline(mean(fullbody_cm(:,2)), 'r')
+% legend 'median' 'mean'
+
 ml_centered_all = fullbody_cm(:,1)-m1; 
 ap_centered_all = fullbody_cm(:,2)-m2;
 
@@ -119,23 +128,23 @@ ap_centered_all = fullbody_cm(:,2)-m2;
 % figure(1)
 % 
 % subplot(2,1,1)
-% plot(timeVec*0.001,fullbody_cm(:,1))
+% plot(timeVec_all*0.001,fullbody_cm(:,1))
 % xlabel 'time (s)'
 % ylabel 'CM ML position'
 % 
 % subplot(2,1,2)
-% plot(timeVec*0.001,fullbody_cm(:,2))
+% plot(timeVec_all*0.001,fullbody_cm(:,2))
 % hold on
 % xlabel 'time (s)'
 % ylabel 'CM AP position'
-
+% 
 % figure(2)
-% plot3(timeVec*0.001,fullbody_cm(:,1),fullbody_cm(:,2))
+% plot3(timeVec_all*0.001,fullbody_cm(:,1),fullbody_cm(:,2))
 % xlabel 'time'
 % ylabel 'ML'
 % zlabel 'AP'
 
-%% truncate to match balansens
+%% truncate
 
 totalTime = (timeVec_all(end) - timeVec_all(1))*0.001;
 joint_info = joint_info_all(:,1);
@@ -148,60 +157,31 @@ for joint_idx = 1:length(joint_idxs)
     
         timeElapsed = (timeVec_all(time_idx) - timeVec_all(1))*0.001;
     
-         %if  timeElapsed >=15 && timeElapsed <= totalTime-5
+         if  timeElapsed >=10 && timeElapsed <= totalTime-10
             joint_info{joint_idx,2}(:,trunc_idx) = joint_info_all{joint_idx,2}(:,time_idx);
             ml_centered(trunc_idx) = ml_centered_all(time_idx); 
             ap_centered(trunc_idx) = ap_centered_all(time_idx);
             timeInts(trunc_idx) = timeInts_all(time_idx);
             timeVec(trunc_idx) = timeVec_all(time_idx);
             trunc_idx = trunc_idx+1;
-         %end
+         end
     end
 end
 
 
-%% centered data
+%% visualize centered data
 
 figure(3)
 
 subplot(2,1,1)
 plot(timeVec*0.001,ml_centered)
-hold on
 xlabel 'time (s)'
 ylabel 'Centered CM ML position'
 
 subplot(2,1,2)
 plot(timeVec*0.001,ap_centered)
-hold on
 xlabel 'time (s)'
 ylabel 'Centered CM AP position'
-
-%% compare to BalanSens
-
-file_path_2 = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Wyse Sookoo\BalanSens Data\20181120-mvi06_mr_foamEC_1a.csv';
-data = readmatrix(file_path_2);
-
-% columns = ankle angle ML, ankle angle AP, hip angle ML, hip angle AP, 
-% COM sway ML (cm), COM sway AP (cm), sway velocity (cm/s)
-
-ml_cm_sway = data(:,5);
-ap_cm_sway = data(:,6);
-
-figure(1)
-plot(ml_cm_sway,ap_cm_sway)
-hold on
-plot(ml_centered,ap_centered)
-axis([-2 2 -2 2])
-
-figure(3)
-
-subplot(2,1,1)
-yline(max(ml_cm_sway))
-yline(min(ml_cm_sway))
-
-subplot(2,1,2)
-yline(max(ap_cm_sway/10))
-yline(min(ap_cm_sway/10))
 
 
 %% RMS
@@ -216,3 +196,28 @@ ap_rms = sqrt(mean(ap_centered.^2));
 % xlabel 'ML'
 % ylabel 'AP'
 
+%% Principal sway vector
+
+% calculate distance from center of each xy pair
+
+for point_idx = 1:length(ml_centered)
+
+    magnitude(point_idx,1) = sqrt(ml_centered(point_idx)^2 + ... 
+        ap_centered(point_idx)^2);
+
+    theta(point_idx,1) = atan(ml_centered(point_idx) / ...
+        ap_centered(point_idx));
+
+end
+
+avg_magnitude = mean(magnitude);
+avg_theta = mean(theta); %radians
+
+% resolve average vector
+
+avg_mag_x = avg_magnitude*sin(avg_theta);
+avg_mag_y = avg_magnitude*cos(avg_theta);
+
+quiver(0,0,avg_mag_x,avg_mag_y)
+hold on
+plot(ml_centered,ap_centered)

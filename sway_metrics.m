@@ -110,10 +110,16 @@ m2 = median(fullbody_cm(:,2));
 % 
 % subplot(2,1,1)
 % yline(m1)
+% hold on
+% yline(mean(fullbody_cm(:,1)), 'r')
+% legend 'median' 'mean'
 % 
 % subplot(2,1,2)
 % yline(m2)
-% 
+% hold on
+% yline(mean(fullbody_cm(:,2)), 'r')
+% legend 'median' 'mean'
+
 ml_centered_all = fullbody_cm(:,1)-m1; 
 ap_centered_all = fullbody_cm(:,2)-m2;
 
@@ -122,18 +128,18 @@ ap_centered_all = fullbody_cm(:,2)-m2;
 % figure(1)
 % 
 % subplot(2,1,1)
-% plot(timeVec*0.001,fullbody_cm(:,1))
+% plot(timeVec_all*0.001,fullbody_cm(:,1))
 % xlabel 'time (s)'
 % ylabel 'CM ML position'
 % 
 % subplot(2,1,2)
-% plot(timeVec*0.001,fullbody_cm(:,2))
+% plot(timeVec_all*0.001,fullbody_cm(:,2))
 % hold on
 % xlabel 'time (s)'
 % ylabel 'CM AP position'
-
+% 
 % figure(2)
-% plot3(timeVec*0.001,fullbody_cm(:,1),fullbody_cm(:,2))
+% plot3(timeVec_all*0.001,fullbody_cm(:,1),fullbody_cm(:,2))
 % xlabel 'time'
 % ylabel 'ML'
 % zlabel 'AP'
@@ -190,3 +196,28 @@ ap_rms = sqrt(mean(ap_centered.^2));
 % xlabel 'ML'
 % ylabel 'AP'
 
+%% Principal sway vector
+
+% calculate distance from center of each xy pair
+
+for point_idx = 1:length(ml_centered)
+
+    magnitude(point_idx,1) = sqrt(ml_centered(point_idx)^2 + ... 
+        ap_centered(point_idx)^2);
+
+    theta(point_idx,1) = atan(ml_centered(point_idx) / ...
+        ap_centered(point_idx));
+
+end
+
+avg_magnitude = mean(magnitude);
+avg_theta = mean(theta); %radians
+
+% resolve average vector
+
+avg_mag_x = avg_magnitude*sin(avg_theta);
+avg_mag_y = avg_magnitude*cos(avg_theta);
+
+quiver(0,0,avg_mag_x,avg_mag_y)
+hold on
+plot(ml_centered,ap_centered)
