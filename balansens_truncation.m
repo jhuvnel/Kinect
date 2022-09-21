@@ -5,7 +5,7 @@ clc
 
 %% Load CM data
 
-file_path = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Chow\Kinect Project\Test Files\20181120-154922MVI006_MR_test3_body1_joints.txt';
+file_path = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Chow\Kinect Project\Test Files\20181120-154922MVI006_MR_test3_body2_joints.txt';
 
 [jointData, timeVec_all, timeInts_all] = getJointData(file_path);
 
@@ -129,16 +129,16 @@ figure(1)
 subplot(2,1,1)
 plot(timeVec_all*0.001,ml_centered_all)
 hold on
-yline(max(ml_cm_sway/10))
-yline(min(ml_cm_sway/10))
+yline(max(ml_cm_sway/100))
+yline(min(ml_cm_sway/100))
 xlabel 'time (s)'
 ylabel 'Centered CM ML position'
 
 subplot(2,1,2)
 plot(timeVec_all*0.001,ap_centered_all)
 hold on
-yline(max(ap_cm_sway/10))
-yline(min(ap_cm_sway/10))
+yline(max(ap_cm_sway/100))
+yline(min(ap_cm_sway/100))
 xlabel 'time (s)'
 ylabel 'Centered CM AP position'
 
@@ -155,19 +155,19 @@ for joint_idx = 1:length(joint_idxs)
     
         timeElapsed = (timeVec_all(time_idx) - timeVec_all(1))*0.001;
     
-         if  timeElapsed >=10 && timeElapsed <= totalTime-2
+        % if  timeElapsed >=10 && timeElapsed <= totalTime-2
             joint_info{joint_idx,2}(:,trunc_idx) = joint_info_all{joint_idx,2}(:,time_idx);
             ml_centered(trunc_idx) = ml_centered_all(time_idx); 
             ap_centered(trunc_idx) = ap_centered_all(time_idx);
             timeInts(trunc_idx) = timeInts_all(time_idx);
             timeVec(trunc_idx) = timeVec_all(time_idx);
             trunc_idx = trunc_idx+1;
-         end
+        % end
     end
 end
 
 figure(2)
 plot(ml_cm_sway,ap_cm_sway)
 hold on
-plot(ml_centered.*10,ap_centered.*10)
+plot(ml_centered.*100,ap_centered.*100)
 axis([-2 2 -2 2])

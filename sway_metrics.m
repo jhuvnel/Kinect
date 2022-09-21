@@ -3,7 +3,7 @@ clc
 
 %% Load CM data
 
-file_path = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Chow\Kinect Project\Test Files\20181120-154922MVI006_MR_test3_body1_joints.txt';
+file_path = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Chow\Kinect Project\Test Files\20181120-154922MVI006_MR_test3_body2_joints.txt';
 
 [jointData, timeVec_all, timeInts_all] = getJointData(file_path);
 
