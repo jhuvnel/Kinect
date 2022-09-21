@@ -1,6 +1,6 @@
 %function joints = readJoints(directory, filename)
 
-f=fopen('C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Chow\Kinect Project\Test Files\20170202-145901_mvi003_MR_foam_EC_body1_joints.txt', 'r');
+f=fopen('C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Chow\Kinect Project\Test Files\20181120-154922MVI006_MR_test3_body2_joints.txt', 'r');
 if f == -1
     joints = [];
 else
