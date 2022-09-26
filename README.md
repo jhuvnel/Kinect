@@ -59,7 +59,7 @@ Output:
 
 ### center_of_mass_sway
 * tracks the changes in center of mass position over time for a single kinect recording
-* planning to make this a function
+* basis for getCMdata function
 
 ### linearSwayDist
 * finds the length of the sway path for specified joints
