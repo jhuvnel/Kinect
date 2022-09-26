@@ -6,22 +6,17 @@ function fullbody_cm = getCMdata(jointData, mass, center_opt)
 joint_idxs = [4; 3; 1; 5; 6; 9; 10; 7; 11; 22; 24; 13;  17; 14; 18; 15; ...
     19; 16; 20; 21];
 
-joint_info_all = {'head';'neck';'hipCenter';'shoulderLeft';'elbowLeft'; ...
-    'shoulderRight';'elbowRight';'wristLeft';'wristRight'; 'handtipLeft';...
-    'handtipRight';'hipLeft';'hipRight';'kneeLeft';'kneeRight'; ...
-    'ankleLeft';'ankleRight';'footLeft';'footRight';'shoulderCenter'};
-
 for i = 1:length(joint_idxs)
-    joint_info{i,2} = jointData(:,:,joint_idxs(i));
+    joint_info{i,1} = jointData(:,:,joint_idxs(i));
 end
 
-for frame = 1:length(joint_info{1, 2})
+for frame = 1:length(joint_info{1, 1})
     
     jointCoordinates =[];
 
     for i = 1:length(joint_info)     
          
-            jointCoordinates(i,:) = joint_info{i,2}(:,frame);
+            jointCoordinates(i,:) = joint_info{i,1}(:,frame);
     end
 
 % calculate segmental CM locations
