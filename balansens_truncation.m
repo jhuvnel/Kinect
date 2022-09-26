@@ -1,4 +1,4 @@
-%% trying to find a way to truncate kinect data by comparing to BalanSens data
+Da%% trying to find a way to truncate kinect data by comparing to BalanSens data
 
 clear
 clc
@@ -121,6 +121,12 @@ data = readmatrix(file_path_2);
 
 ml_cm_sway = data(:,5);
 ap_cm_sway = data(:,6);
+
+%% sampling frequency matching
+
+fs_k = length(fullbody_cm)/((timeVec_all(end) - timeVec_all(1))*0.001);
+
+fs_b = size(data,1)/30;
 
 %% compare un-truncated centered data to BalanSens limits
 
