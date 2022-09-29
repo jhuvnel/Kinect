@@ -18,19 +18,7 @@ CMdata_all = getCMdata(jointData, m, 'median');
 
 totalTime = (timeVec_all(end) - timeVec_all(1))*0.001;
 
-trunc_idx = 1;
-
-for time_idx = 1:length(timeVec_all)
-
-    timeElapsed = (timeVec_all(time_idx) - timeVec_all(1))*0.001;
-
-     if  timeElapsed >=10 && timeElapsed <= totalTime-10
-        CMdata(trunc_idx,:) = CMdata_all(time_idx,:);
-        timeInts(trunc_idx) = timeInts_all(time_idx);
-        timeVec(trunc_idx) = timeVec_all(time_idx);
-        trunc_idx = trunc_idx+1;
-     end
-end
+[CMdata, timeVec, timeInts] = truncateCMandTimeData(CMdata_all, timeVec_all, timeInts_all, 10, 10);
 
 %% visualize centered data
 
@@ -86,7 +74,7 @@ quiver(0,0,avg_mag_x,avg_mag_y)
 hold on
 plot(CMdata(:,1),CMdata(:,2))
 
-%% PSD
+%% PSD median frequency
 
 Fs = 30;
 t = timeVec;
@@ -95,7 +83,6 @@ x = CMdata;
 [Pxx,F] = periodogram(x,[],length(x),Fs);
 
 figure(5)
-plot(F,10*log10(Pxx))
+medfreq(Pxx,F)
 legend 'ml' 'ap' 'vertical'
 hold on
-xline(median(F))
