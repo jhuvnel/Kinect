@@ -47,7 +47,7 @@ xlabel 'time (s)'
 ylabel 'Centered CM AP position'
 
 
-%% RMS
+%% displacement RMS
 
 ml_rms = sqrt(mean(CMdata(:,1).^2));
 ap_rms = sqrt(mean(CMdata(:,2).^2));
@@ -85,3 +85,17 @@ figure(4)
 quiver(0,0,avg_mag_x,avg_mag_y)
 hold on
 plot(CMdata(:,1),CMdata(:,2))
+
+%% PSD
+
+Fs = 30;
+t = timeVec;
+
+x = CMdata;
+[Pxx,F] = periodogram(x,[],length(x),Fs);
+
+figure(5)
+plot(F,10*log10(Pxx))
+legend 'ml' 'ap' 'vertical'
+hold on
+xline(median(F))
