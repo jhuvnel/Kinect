@@ -46,6 +46,39 @@ Output:
 * fullbody_cm: n x m double
 	* n = number of data point sets
 	* m = number of dimensions (3)
+	
+### truncateCMandTimeData
+
+This function truncates the CM array, timeInts vector, and timeVec vector based on user specified cutoffs.
+
+Inputs
+* CMdata: n x m double
+	* Can be obtained from the getCMdata function
+	* n = number of data point sets
+	* m = number of dimensions (3)
+* timeVec: double
+	* Vector of timestamp values
+	* Obtained from the getJointData function
+* timeInts: double
+	* Vector of elapsed time between consecutive data points
+	* Appended with 33 (copied from Meg's scripts)
+	* Obtained from the getJointData function
+* lower_cutoff: double
+	* All points that occur before this many seconds have elapsed will be truncated
+	* ex: if lower_cutoff = 10, the first 10 seconds will be deleted
+* upper_cutoff: double
+	* all points that occur less than this many seconds from the end of the data will be truncated
+	* ex: if upper_cutoff = 10, the last 10 seconds will be deleted
+
+Outputs
+* truncated_CM: n x m double
+	* n = number of data point sets after truncation
+	* m = number of dimensions (3)
+* truncated_timeVec: double
+	* truncated vector of timestamp values
+* truncated_timeInts: double
+	* truncated vector of elapsed time between consecutive data points
+
 
 ## Scripts
 ### jointSway_copy and readJoint_copy
