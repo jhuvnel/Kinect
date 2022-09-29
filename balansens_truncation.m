@@ -1,4 +1,4 @@
-Da%% trying to find a way to truncate kinect data by comparing to BalanSens data
+%% trying to find a way to truncate kinect data by comparing to BalanSens data
 
 clear
 clc
