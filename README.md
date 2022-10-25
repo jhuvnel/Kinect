@@ -106,7 +106,7 @@ Outputs
 * script for attempting to truncate trial data based on balansens data for better trial start/stop accuracy
 
 ### start_stop_signal_test
-* script for testing methods of indicating the start and stop of trials
+* script for finding the start and stop of trials from a hand signal
 
 ### visualize_truncation
 * creates a plot of truncated data to confirm truncation cutoffs are accurate
