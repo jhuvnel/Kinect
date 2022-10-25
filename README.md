@@ -47,15 +47,16 @@ Output:
 	* n = number of data point sets
 	* m = number of dimensions (3)
 	
-### truncateCMandTimeData
+### truncateSignalandTimeData
 
-This function truncates the CM array, timeInts vector, and timeVec vector based on user specified cutoffs.
+This function truncates  a joint info or CM array, timeInts vector, and timeVec vector based on user specified cutoffs.
+* Name changed from truncateCMandTimeData
 
 Inputs
-* CMdata: n x m double
+* Signal: n x m double
 	* Can be obtained from the getCMdata function
 	* n = number of data point sets
-	* m = number of dimensions (3)
+	* m = number of dimensions
 * timeVec: double
 	* Vector of timestamp values
 	* Obtained from the getJointData function
@@ -71,9 +72,9 @@ Inputs
 	* ex: if upper_cutoff = 10, the last 10 seconds will be deleted
 
 Outputs
-* truncated_CM: n x m double
+* truncated_signal: n x m double
 	* n = number of data point sets after truncation
-	* m = number of dimensions (3)
+	* m = number of dimensions
 * truncated_timeVec: double
 	* truncated vector of timestamp values
 * truncated_timeInts: double
@@ -106,3 +107,6 @@ Outputs
 
 ### start_stop_signal_test
 * script for testing methods of indicating the start and stop of trials
+
+### visualize_truncation
+* creates a plot of truncated data to confirm truncation cutoffs are accurate
