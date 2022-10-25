@@ -4,7 +4,7 @@
 clear
 clc
 
-file_path = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Chow\Kinect Project\Test Files\20181120-154922MVI006_MR_test3_body1_joints.txt';
+file_path = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Wyse Sookoo\Kinect\Training day kinect\20220928-152641mvixxx_mr_floorEC_body1_joints.txt.txt';
 
 [jointData, timeVec, timeInts_all] = getJointData(file_path);
 
@@ -36,11 +36,11 @@ for joint_idx = 1:length(joint_idxs)
     
         timeElapsed = (timeVec(time_idx) - timeVec(1))*0.001;
     
-        if timeElapsed >= 10 && timeElapsed <= totalTime-10
+        %if timeElapsed >= 10 && timeElapsed <= totalTime-10
             joint_info{joint_idx,2}(:,trunc_idx) = joint_info_all{joint_idx,2}(:,time_idx);
-            timeInts(trunc_idx) = timeInts_all(time_idx-1);
+            timeInts(trunc_idx) = timeInts_all(time_idx);
             trunc_idx = trunc_idx+1;
-        end
+       % end
     end
 end
 
@@ -129,6 +129,7 @@ subplot(2,1,1)
 
 plot3(fullbody_cm(:,1),fullbody_cm(:,2),fullbody_cm(:,3))
 
+%%
 hold on
 for plot_idx = 1:11
     plot3(joint_info{joint_idxs_2(plot_idx),2}(1,:), ...

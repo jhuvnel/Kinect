@@ -20,6 +20,9 @@ function [jointData, timeVec, timeInts] = getJointData(file_path)
 
 %% open file and scan for strings and float values
 
+% 10/24/22 - some pre-op files have infinite depth values that interrupt
+% the fscanf command, these were replaced with zeroes
+
 f=fopen(file_path, 'r');
 if f == -1
     joints = [];
