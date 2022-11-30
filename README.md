@@ -113,3 +113,6 @@ Outputs
 
 ### visualize_truncation
 * creates a plot of truncated data to confirm truncation cutoffs are accurate
+
+### mvi_excel_template
+* template script for creating spreadsheets to organize kinect data
