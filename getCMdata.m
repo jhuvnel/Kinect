@@ -1,4 +1,4 @@
-function fullbody_cm = getCMdata(jointData, mass, center_opt)
+function fullbody_cm = getCMdata(jointData, mass, gender, center_opt)
 
 % Target joints: head, neck (maybe spine shoulder), spine base, shoulders,
 % elbows, wrists, hand tips, hips, knees, ankles, feet
@@ -25,8 +25,14 @@ segment_cm = {'head';'trunk';'upperArmLeft';'upperArmRight'; ...
     'forearmLeft';'forearmRight';'handLeft';'handRight';'thighLeft'; ...
     'thighRight';'shankLeft';'shankRight';'footLeft';'footRight'};
 
-cm_length_factor = [0.5894;0.4151;0.5754;0.5754;0.4559;0.4559;0.7474; ...
+if gender == 'f'
+    cm_length_factor = [0.5894;0.4151;0.5754;0.5754;0.4559;0.4559;0.7474; ...
     0.7474;0.3612;0.3612;0.4416;0.4416;0.4014;0.4014];
+
+elseif gender == 'm'
+    cm_length_factor = [0.5976;0.4486;0.5772;0.4574;0.4574;0.79;0.79; ...
+    0.4095;0.4095;0.4459;0.4459;0.4415;0.4415];
+end
 
 proximal_pts = [jointCoordinates(2,:);jointCoordinates(3,:); ...
     jointCoordinates(4,:);jointCoordinates(6,:);jointCoordinates(5,:); ...
@@ -73,8 +79,14 @@ end
  % MVI002: m = 81.2 kg (new weight is 68.2 kg)
  
 
- segment_mass = [0.0668; 0.4257; 0.0255; 0.0255; 0.0138; 0.0138 ;0.0056;...
+if gender == 'f'
+    segment_mass = [0.0668; 0.4257; 0.0255; 0.0255; 0.0138; 0.01380; 0.0056;...
      0.0056; 0.1478; 0.1478; 0.0481; 0.0481; 0.0129; 0.0129];
+
+elseif gender == 'm'
+    segment_mass = [0.0694; 0.4346; 0.0271; 0.0271; 0.0162; 0.0162; 0.0061;...
+     0.0061; 0.1416; 0.1416; 0.0433; 0.0433; 0.0137; 0.0137];
+end
 
  for segmentCM_idx = 1:14
        
@@ -91,10 +103,10 @@ end
 
 switch nargin
 
-    case 2
+    case 3
         fullbody_cm = fullbody_cm_uncentered;
 
-    case 3
+    case 4
 
         center_opt = lower(center_opt); % make case insensitive
 
