@@ -35,6 +35,9 @@ Required inputs:
 	* j = number of joints (25)
 * mass: double
 	* Mass of the subject in kg
+* gender: char
+	* Either 'f' for female or 'm' for male
+	* The coefficients used in the CM calculations are different for males and females
 
 Optional input:
 * center_opt: string
@@ -110,3 +113,6 @@ Outputs
 
 ### visualize_truncation
 * creates a plot of truncated data to confirm truncation cutoffs are accurate
+
+### mvi_excel_template
+* template script for creating spreadsheets to organize kinect data
