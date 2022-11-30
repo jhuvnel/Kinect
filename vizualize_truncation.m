@@ -4,16 +4,16 @@
 clear
 clc
 
-exp_table = readtable("MVI009_pre-act_kinect.xlsx");
+exp_table = readtable("MVI009_11x_kinect.xlsx");
 
 % filter table
 exp_table = exp_table(exp_table.BodyClass == "subject", :);
+exp_table = exp_table(exp_table.EC == 1, :);
 
 
+file_idx = 15;
 
-for file_idx = 3
-
-    file_dir = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Wyse Sookoo\Kinect\MVI009\MVI009_pre-act\';
+    file_dir = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Wyse Sookoo\Kinect\MVI009\MVI009_11x\formatted\';
     file_name = exp_table.FileName(file_idx)
     file_path = char(strcat(file_dir,file_name));
 
@@ -82,4 +82,3 @@ for file_idx = 3
          end
      pause(timeInts(m)*0.001);
     end
-end

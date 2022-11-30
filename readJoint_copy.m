@@ -3,15 +3,16 @@
 clear
 clc
 
-exp_table = readtable("MVI009_pre-act_kinect.xlsx");
+exp_table = readtable("MVI009_11x_kinect.xlsx");
 
 % filter table
-exp_table = exp_table(exp_table.BodyClass == "subject", :);
+%exp_table = exp_table(exp_table.BodyClass == "", :);
+exp_table = exp_table(exp_table.EC == 1, :);
 
 %%
-for file_idx = 1
+file_idx = 65;
 
-    file_dir = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Wyse Sookoo\Kinect\MVI009\MVI009_pre-act\';
+    file_dir = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Wyse Sookoo\Kinect\MVI009\MVI009_11x\formatted\';
     file_name = exp_table.FileName(file_idx)
     file_path = char(strcat(file_dir,file_name));
     
@@ -36,7 +37,6 @@ for file_idx = 1
                 jointData(:,m) = joints(jointLoc(m,:),i);
             end
     
-            figure(file_idx)
             if i == 1
                 h = plot3(jointData(1,:),jointData(3,:), jointData(2,:),'o');
                 axis([-3 3 0 4.5 -2 2])
@@ -44,7 +44,7 @@ for file_idx = 1
                 ylabel('Y');
                 zlabel('Z');
                 grid on;
-                % view([161.1 5.4])
+                %view([3.6 3.6])
             else
                 h.XData = jointData(1,:);
                 h.YData = jointData(3,:);
@@ -54,4 +54,3 @@ for file_idx = 1
         end
         
     end
-end
