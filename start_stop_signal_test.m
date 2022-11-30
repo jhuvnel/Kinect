@@ -6,22 +6,25 @@ clear
 clc
 
 exp_table = readtable("MVI009_11x_kinect.xlsx");
-file_rows = find(exp_table.BodyClass == "researcher")+1;
+%file_rows = find(exp_table.BodyClass == "researcher")+1;
 
-% only keep files classified as researcher
+% only keep files for EC tests classified as researcher
 exp_table = exp_table(exp_table.BodyClass == "researcher", :);
+exp_table = exp_table(exp_table.EC == 1, :);
 
-threshold = -0.7;
+threshold = 0.75;
 
 % for
-    file_idx = 64;
+    file_idx = 29;
 
-    file_dir = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Wyse Sookoo\Kinect\MVI009\MVI009_11x\';
+    file_dir = 'C:\Users\Kim Sookoo\OneDrive - Johns Hopkins\VNEL1DRV\_Wyse Sookoo\Kinect\MVI009\MVI009_11x\formatted\';
     file_name = exp_table.FileName(file_idx)
     file_path = char(strcat(file_dir,file_name));
 
     [jointData, timeVec_all, timeInts_all] = getJointData(file_path);
     
+    timeVec = timeVec_all; % use to cut off extra info if it is messing up the threshold
+
     % Target joints: hand tips
     
     joint_idxs = [22; 24];
@@ -58,11 +61,11 @@ end_idx = 1;
 lower_cutoff_time = [];
 upper_cutoff_time = [];
 
-for i = 1:length(normData)
+for i = 1:length(timeVec)
 
     if prev_val >= threshold && normData(i) < threshold
 
-        lower_cutoff_time(start_idx) = timeVec_all(i);
+        lower_cutoff_time(start_idx) = timeVec(i);
         lower_cutoff_idx(start_idx) = i;
         start_idx = start_idx+1;
 
@@ -70,7 +73,7 @@ for i = 1:length(normData)
 
     if prev_val <= threshold && normData(i) > threshold
 
-        upper_cutoff_time(end_idx) = timeVec_all(i);
+        upper_cutoff_time(end_idx) = timeVec(i);
         upper_cutoff_idx(end_idx) = i;
         end_idx = end_idx+1;
         
@@ -80,22 +83,22 @@ for i = 1:length(normData)
 end
 
 if isempty(lower_cutoff_time) == 1
-        lower_cutoff_time = timeVec_all(1);
+        lower_cutoff_time = timeVec(1);
         lower_cutoff_idx(start_idx) = 1;
  end
 
  if isempty(upper_cutoff_time) == 1
-        upper_cutoff_time = timeVec_all(end);
+        upper_cutoff_time = timeVec(end);
         upper_cutoff_idx(end_idx) = length(normData);
  end
 
 scatter(lower_cutoff_time(1)*0.001,normData(lower_cutoff_idx(1)))
 scatter(upper_cutoff_time(end)*0.001,normData(upper_cutoff_idx(end)))
 
-lower_cutoff = (lower_cutoff_time(1)-timeVec_all(1))*0.001;
-upper_cutoff = (timeVec_all(end)-upper_cutoff_time(end))*0.001;
-truncatedTime = (timeVec_all(upper_cutoff_idx(end))- ...
-    timeVec_all(lower_cutoff_idx(1)))*0.001;
+lower_cutoff = (lower_cutoff_time(1)-timeVec(1))*0.001;
+upper_cutoff = (timeVec(end)-upper_cutoff_time(end))*0.001;
+truncatedTime = (timeVec(upper_cutoff_idx(end))- ...
+    timeVec(lower_cutoff_idx(1)))*0.001;
 
 writematrix([lower_cutoff, upper_cutoff,truncatedTime], ...
-    "MVI009_11x_kinect.xlsx", 'Range','J157')
+    "MVI009_11x_kinect.xlsx", 'Range','J147')
